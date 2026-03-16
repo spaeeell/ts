@@ -1,48 +1,60 @@
+// //чтобы запустить написать в консоли node main.js
+
+
 class Visa {
     private _country: string;
     private _isValid: boolean;
     private _year: number;
 
+
     constructor() {
-        const countries = ["Арстоцка", "Колечия", "Орбистан"];
-        const randomIndex = Math.floor(Math.random() * countries.length);
-        this._country = countries[randomIndex]!;
-        this._isValid = Math.random() < 0.5;
-        this._year = Math.floor(Math.random() * (2050 - 2000 + 1)) + 2000;
+        this._country =  ["Арстоцка", "Колечия", "Орбистан"][ Math.floor(Math.random() * 3)]!; 
+        this._isValid = Boolean (Math.floor(Math.random() * 2));
+        this._year = Math.floor(Math.random() * (2050 - 2000 + 1) + 2000);
     }
 
-    get Country(): string { return this._country; }
-    get IsValid(): boolean { return this._isValid; }
-    get Year(): number { return this._year; }
+    public get country():string {
+        return this._country
+    };
+    public get isValid():boolean {
+        return this._isValid
+    };
+    public get year():number {
+        return this._year
+    };
 
-    ShowInfo(): void {
-        console.log(`Страна: ${this._country}, Валидна: ${this._isValid}, Год: ${this._year}`);
+    ShowInfo():void {
+        console.log(this.country, this.isValid, this.year);
     }
+
 }
-
 class BorderGuard {
-    public CheckVisa(visa: Visa): string {
-        if (visa.Country !== "Арстоцка" && visa.Country !== "Орбистан") {
-            return "Враждебная страна";
-        }
-
-        if (!visa.IsValid) {
-            return "ПОДДЕЛКА!";
-        }
-
-        if (Math.abs(visa.Year - 2026) > 5) {
+    public CheckVisa(visa:Visa):string {
+        if(visa.country == "Колечия" )
+            return "Враждебная страна"
+        if(visa.isValid == false) 
+            return "ПОДДЕЛКА"
+        if(visa.year - 2026 || 2026 - visa.year > 5 )
             return "Некорректный год выпуска";
-        }
 
-        return "Въезд разрешен";
+    return "Въезд разрешен"
     }
 }
 
-const guard = new BorderGuard();
-const visas: Visa[] = [new Visa(), new Visa(), new Visa()];
+function Main(): void {
+    console.log("-----ПРОВЕРКА ДОКУМЕНТОВ-----");
 
-visas.forEach((v, index) => {
-    console.log(`--- Проверка визы №${index + 1} ---`);
-    v.ShowInfo();
-    console.log("Результат: " + guard.CheckVisa(v));
-});
+    const Guard = new BorderGuard();
+    const visas: Visa[] = [
+        new Visa(),
+        new Visa(),
+        new Visa(),
+    ];
+    
+    for(const visa of visas) {
+        visa.ShowInfo();
+        console.log(Guard.CheckVisa(visa));
+    }
+}
+
+Main();
