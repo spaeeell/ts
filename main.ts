@@ -1,68 +1,21 @@
-class Visa{
-    private _country: string;
-    private _isValid: boolean;
-    private _year: number;
+import { Unit } from "./Unit";
+import { Warrior, Archer, Wizard } from "./Units";
+import { Fire, Frost, Poison } from "./Decorators";
 
-    constructor(){
-        const countries = ["Арстоцка", "Колечия", "Орбистан"];
-        const randomIndex = Math.floor(Math.random() * countries.length);
-        this._country = countries[randomIndex]!;
+function createRandomUnit(): Unit {
 
-        this._isValid = Math.random() < 0.5;
+    const baseClasses = [Warrior, Archer, Wizard];
+    const RandomBase = baseClasses[Math.floor(Math.random() * baseClasses.length)];   //случ выбор юнита
+    let unit: Unit = new RandomBase();
 
-        this._year = Math.floor(Math.random()* (2050 - 2000 + 1))+ 2000;
-    }
-
-    get Country(): string{
-        return this._country
-    }
-
-    get IsValid(): boolean{
-        return this._isValid
-    }
-
-    get Year(): number{
-        return this._year
-    }
-
+    const decoratorTypes = [Fire, Frost, Poison];
+    const RandomDecorator = decoratorTypes[Math.floor(Math.random() * decoratorTypes.length)];    //случ эффект 
     
-    ShowInfo(): void{
-        console.log(this._country);
-        console.log(this._isValid);
-        console.log(this._year);
-    }
+    return new RandomDecorator(unit);
 }
 
-class BorderGuard{
-    public CheckVisa(visa : Visa): string{
-        if(visa.Country != "Арстоцка" && visa.Country != "Орбистан"){
-            return "Враждебная страна";
-        } 
-
-        if(visa.IsValid == false){
-            return "ПОДДЕЛКА!";
-        }
-
-        if(visa.Year - 2026 || 2026 - visa.Year > 5){
-            return "Некорректный год выпуска";
-        } else {
-            return "Въезд разрешен";
-        }
-    }
-
-    public Main(){
-        const border = new BorderGuard();
-
-        const visas: Visa[] = [
-            new Visa(),
-            new Visa(),
-            new Visa(),
-        ];
-
-        for(const visa of visas) {
-            visa.ShowInfo();
-            const result = border.CheckVisa(visa);
-            console.log("Результат проверки: " + result);
-        }
-    }
+console.log("Генератор случайных юнитов");
+for (let i = 0; i < 5; i++) {
+    const unit = createRandomUnit();                                                   //генерирует 5 юнитов
+    console.log(`${i + 1}. ${unit.getDescription()}`);
 }
